@@ -19,7 +19,8 @@ class RunSettings:
 
 def settings_from_env(env: Mapping[str, str]) -> RunSettings:
     return RunSettings(
-        host=env.get("PLM_HOST", DEFAULT_HOST),
+        # An empty value falls back too: "" would bind every interface (review F-2).
+        host=env.get("PLM_HOST") or DEFAULT_HOST,
         port=int(env.get("PLM_PORT", DEFAULT_PORT)),
     )
 
