@@ -29,6 +29,8 @@ include = ["*.py", "*.pyi"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "S", "DTZ", "SIM", "RUF"]
+# User-facing text is Turkish (docs/conventions.md): dotless/dotted I are letters, not confusables.
+allowed-confusables = ["ı", "İ"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101"]
