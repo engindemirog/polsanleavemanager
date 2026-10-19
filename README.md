@@ -1,3 +1,28 @@
+# Polsan Leave Manager
+
+Polsan çalışanlarının izin talebi oluşturduğu, yöneticilerin onayladığı ve İK'nın izin
+bakiyelerini yönettiği web uygulaması. Mimari ve kurallar: [`AGENTS.md`](AGENTS.md) ve `docs/`.
+
+## Çalıştırma
+
+Gereksinim: [uv](https://docs.astral.sh/uv/) (Python 3.12'yi kendisi kurar).
+
+```sh
+uv sync                                   # bağımlılıkları uv.lock'tan kurar
+uv run python -m app                      # http://127.0.0.1:8000 — yalnızca bu makineden erişilir
+```
+
+Port/host: `PLM_PORT` ve `PLM_HOST` ortam değişkenleri (varsayılan `8000` ve `127.0.0.1`).
+
+## Doğrulama
+
+```sh
+uv run playwright install chromium        # bir kerelik: e2e testleri için tarayıcı
+./scripts/check                           # tek doğrulama komutu (--fast: e2e hariç)
+```
+
+---
+
 # ANEW — AI Native Engineering Workspace
 
 **A general-purpose, technology-agnostic bootstrap for building software with AI — under control.**
