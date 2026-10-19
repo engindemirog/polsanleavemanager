@@ -46,6 +46,8 @@ def test_unknown_non_api_path_returns_not_found_problem(client: TestClient) -> N
         ("POST", "/api/does-not-exist"),
         ("DELETE", "/does-not-exist"),
         ("POST", "/static/does-not-exist.css"),
+        ("POST", "/static"),
+        ("GET", "/api/health/"),
     ],
 )
 def test_unknown_path_with_any_method_returns_not_found_problem(

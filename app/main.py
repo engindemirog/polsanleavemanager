@@ -33,7 +33,15 @@ class _StaticFiles(StaticFiles):
 
 def create_app() -> FastAPI:
     # Interactive API docs off: they load third-party assets (CSP) and are unauthenticated.
-    app = FastAPI(title="Polsan Leave Manager", docs_url=None, redoc_url=None, openapi_url=None)
+    # No trailing-slash redirects: a missing address is 404 (R-6), and the redirect would build
+    # its Location from the Host header (review F-6).
+    app = FastAPI(
+        title="Polsan Leave Manager",
+        docs_url=None,
+        redoc_url=None,
+        openapi_url=None,
+        redirect_slashes=False,
+    )
     app.include_router(health.router)
 
     @app.api_route("/", methods=["GET", "HEAD"], include_in_schema=False)

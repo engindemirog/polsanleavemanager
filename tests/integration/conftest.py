@@ -20,4 +20,5 @@ def app() -> FastAPI:
 
 @pytest.fixture
 def client(app: FastAPI) -> TestClient:
-    return TestClient(app, raise_server_exceptions=False)
+    # follow_redirects=False: a redirect is a response under test, never silently followed.
+    return TestClient(app, raise_server_exceptions=False, follow_redirects=False)
