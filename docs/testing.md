@@ -14,6 +14,10 @@
   `@pytest.mark.e2e` ile işaretli. Test edilen uygulamanın (uvicorn, rastgele port, geçici SQLite)
   **tek sahibi bir pytest session fixture'ıdır**: başlatır, hazır olmasını bekler, teardown'da
   durdurur — hata ve timeout durumunda da (`try/finally`, süreç `terminate` → `wait` → `kill`).
+- `tests/e2e/` altındaki her test, conftest tarafından otomatik `e2e` işaretlenir — işaret
+  unutulsa da fast'e kaçamaz.
+- Tarayıcı bir kerelik kurulur (ağ gerekir, check içinde değil):
+  `uv run playwright install chromium`; CI'da `--with-deps` ile.
 - Profil ayrımı seçiciyle: `--fast` → `pytest -m "not e2e"`, full → ek olarak `pytest -m e2e`.
 - Adlandırma: `test_<davranış>.py`, `test_<ne>_<koşul>_<beklenen>` (`docs/conventions.md`).
 - Coverage yüzdesi kapısı **yok**; güvence kabul kriteri ↔ test haritasından gelir.
@@ -21,7 +25,7 @@
 ## What must be tested
 - Her iş kuralı **BR-n** en az bir birim testle (sınır değerleriyle: BR-1 kıdem 5/15 yıl ve yaş
   18/50 eşikleri, BR-2 tatil/hafta sonu, BR-7 yarım gün).
-- Her yasak bağımlılık bir `import-linter` sözleşmesiyle (`docs/architecture.md`).
+- Her yasak bağımlılık mimari testle (`tests/architecture_rules.py`; `docs/architecture.md`).
 - Yetki: her rol için "görebilir / göremez" integration testi; varsayılan RED testi (yetki
   bildirmeyen route yok).
 - Hata yanıtları: problem+json biçimi, iç ayrıntı sızmıyor.

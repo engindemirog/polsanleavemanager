@@ -24,7 +24,10 @@ Her plan ve review'ın uyması gereken temel kurallar.
   CSRF token ister. Token `localStorage`'da tutulmaz. SSO sonraki sürüm (Identity arayüzü arkasında).
 - **Roller:** Employee, Manager, HR.
 - **Varsayılan RED:** her endpoint açıkça rol/sahiplik kontrolü bildirir; kontrol bildirmeyen
-  endpoint'i bir test yakalar (route listesi üzerinden).
+  endpoint'i bir test yakalar (route listesi üzerinden — ilk yetkili endpoint'le eklenir).
+- **Bilinçli istisnalar** (kimlik doğrulamasız, spec 0001): açılış sayfası ve statik dosyaları
+  (`app/static`), sağlık kontrolü (`/api/health`, yalnızca durum döner). Etkileşimli API
+  dokümanları (`/docs`, `/redoc`, `/openapi.json`) kapalıdır. Yeni istisna = spec değişikliği.
 - Yetki **service katmanında** zorlanır; UI'da düğme gizlemek yetki sayılmaz.
 - Görünürlük: Employee yalnızca kendi talep ve bakiyesini; Manager yalnızca doğrudan bağlılarının
   taleplerini; HR herkesi görür. Kendi talebine karar verme yasak (BR-5).

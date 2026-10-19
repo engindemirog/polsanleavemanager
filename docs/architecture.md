@@ -4,7 +4,7 @@
 Polsan Leave Manager, Polsan çalışanlarının izin talebi oluşturduğu, yöneticilerin onayladığı /
 reddettiği ve İK'nın izin bakiyelerini yönettiği bir web uygulamasıdır; e-posta/Excel ile yürüyen
 izin sürecini tek, denetlenebilir bir sisteme taşır. Stil: **modüler monolit** — tek süreç, tek
-repo, tek veritabanı; modül sınırları `import-linter` ile zorlanır. Gerekçe: tek ekip ve orta
+repo, tek veritabanı; modül sınırları grimp tabanlı bir mimari testle zorlanır. Gerekçe: tek ekip ve orta
 ölçekli bir İK uygulaması için servis ayrıştırmanın maliyeti getirisinden büyük; sınırlar testle
 korunduğu için ileride ayrıştırma mümkün kalır (bootstrap kararı, 2026-10-19).
 
@@ -15,8 +15,11 @@ API ile aynı origin.
 Paket düzeni:
 ```
 app/
-  main.py                  # FastAPI uygulaması, router kaydı, exception handler
-  shared/                  # DomainError tabanı, ortak tipler — hiçbir modüle bağımlı değil
+  __main__.py              # yerel başlatma: `uv run python -m app` (yalnızca 127.0.0.1)
+  main.py                  # create_app(): router kaydı, hata yönetimi, statik açılış sayfası
+  health.py                # sağlık kontrolü (/api/health) — kimlik doğrulamasız, yalnızca durum
+  shared/                  # errors.py (DomainError, problem+json), http.py (hata handler'ları,
+                           # güvenlik başlıkları) — hiçbir modüle bağımlı değil
   modules/<module>/
     public.py              # modülün TEK dış yüzü: facade fonksiyonlar + DTO'lar
     api.py                 # FastAPI router (yalnızca kendi modülünün service'ini çağırır)
@@ -44,12 +47,15 @@ tests/unit · tests/integration · tests/e2e
 - Frontend JavaScript yalnızca kendi origin'indeki `/api/...` uçlarını `fetch` ile çağırır.
 
 ## Forbidden dependencies (make them testable)
-Hepsi `pyproject.toml` `[tool.importlinter]` sözleşmeleri olarak `scripts/check` içinde
-(`architecture` adımı) zorlanır; frontend kuralları review'da kontrol edilir.
+1–3, `tests/architecture_rules.py` içindeki genel kurallarla (grimp import grafı) `scripts/check`
+içinde (`test-unit-integration` adımı) zorlanır: modül başı yapılandırma yoktur, yeni bir modül
+otomatik kapsanır; kuralların kendisi sentetik graflarla test edilir (spec 0001). 4 ve 5 review'da
+kontrol edilir. import-linter, "aynı modül / başka modül" ayrımını genel ifade edemediği için
+kullanılmaz (plan 0001, Risk 1).
 1. Bir modül, başka bir modülün `public` dışındaki hiçbir alt paketini import etmez
    (`domain`, `service`, `repository`, `models`, `api`).
 2. `app.modules.*.domain` şunları import etmez: `fastapi`, `starlette`, `sqlalchemy`, `httpx`.
-   Domain saati okumaz ve IO yapmaz — "bugün" parametre olarak verilir (import-linter çağrıyı
+   Domain saati okumaz ve IO yapmaz — "bugün" parametre olarak verilir (import grafı çağrıyı
    göremez; bu kısım review'da kontrol edilir).
 3. `app.shared` hiçbir `app.modules.*` paketini import etmez.
 4. Bir modülün `models`/`repository` paketi başka modülün tablosuna JOIN veya sorgu yapmaz
