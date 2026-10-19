@@ -40,12 +40,32 @@ def test_unknown_non_api_path_returns_not_found_problem(client: TestClient) -> N
     _assert_problem(response.json(), 404, "not_found")
 
 
+@pytest.mark.parametrize(
+    ("method", "path"),
+    [
+        ("POST", "/api/does-not-exist"),
+        ("DELETE", "/does-not-exist"),
+        ("POST", "/static/does-not-exist.css"),
+    ],
+)
+def test_unknown_path_with_any_method_returns_not_found_problem(
+    client: TestClient, method: str, path: str
+) -> None:
+    """AC-5 / R-6: a missing address is "not found" whatever the method."""
+    response = client.request(method, path)
+
+    assert response.status_code == 404
+    assert response.headers["content-type"] == PROBLEM_MEDIA_TYPE
+    _assert_problem(response.json(), 404, "not_found")
+
+
 def test_unsupported_method_returns_method_not_allowed_problem(client: TestClient) -> None:
-    """AC-6"""
+    """AC-6: the router itself answers 405 and names the allowed methods."""
     response = client.post("/api/health")
 
     assert response.status_code == 405
     assert response.headers["content-type"] == PROBLEM_MEDIA_TYPE
+    assert {m.strip() for m in response.headers["allow"].split(",")} == {"GET", "HEAD"}
     _assert_problem(response.json(), 405, "method_not_allowed")
     assert response.json()["title"] == "Yöntem desteklenmiyor"
 
