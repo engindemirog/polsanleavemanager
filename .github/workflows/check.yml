@@ -19,8 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # The bootstrap workflow may add toolchain setup steps here (e.g. setup-java, setup-node)
-      # to match the commands it writes into scripts/check.conf.
+      # Toolchain for scripts/check.conf (bootstrap): uv installs Python 3.12 from .python-version.
+      - uses: astral-sh/setup-uv@v6
+      - name: Install locked environment
+        run: uv sync --frozen
       # --fast is for the inner loop only; CI always runs the full contract (docs/testing.md).
       - name: Verification contract
         run: |
@@ -29,3 +31,15 @@ jobs:
           else
             echo "scripts/check.conf not present yet (pre-bootstrap) — skipping."
           fi
+
+  audit:
+    # Dependency CVE scan (docs/security.md, Dependencies) — needs network, so it lives in CI,
+    # not in scripts/check.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: pip-audit on the locked dependency set
+        run: |
+          uv export --frozen --all-groups --no-hashes --format requirements-txt > "$RUNNER_TEMP/requirements.txt"
+          uvx pip-audit --strict -r "$RUNNER_TEMP/requirements.txt"
