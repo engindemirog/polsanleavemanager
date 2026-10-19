@@ -23,6 +23,8 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - name: Install locked environment
         run: uv sync --frozen
+      - name: Install e2e browser (docs/testing.md)
+        run: uv run --frozen playwright install --with-deps chromium
       # --fast is for the inner loop only; CI always runs the full contract (docs/testing.md).
       - name: Verification contract
         run: |
