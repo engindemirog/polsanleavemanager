@@ -40,5 +40,6 @@ files = ["app"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q --strict-markers"
+addopts = "-q --strict-markers --import-mode=importlib"
+pythonpath = ["."]
 markers = ["e2e: browser end-to-end tests (full profile only)"]
