@@ -1,17 +1,31 @@
 # Testing
 
-> **Template — filled during bootstrap.**
-
 ## The contract
 - Every acceptance criterion maps to at least one test (criterion ↔ test map lives in the plan).
 - Tests assert **behavior**, not implementation details or mere status codes.
 - The whole suite runs inside `scripts/check` — one command, everywhere.
 
 ## Frameworks & layout
-<!-- Test framework(s), where tests live, naming pattern. -->
+- **pytest** (`uv run --frozen pytest`), ayarlar `pyproject.toml` `[tool.pytest.ini_options]`.
+- `tests/unit/` — domain kuralları; saf Python, DB/HTTP/saat yok ("bugün" parametre).
+- `tests/integration/` — FastAPI `TestClient` + **test başına geçici SQLite dosyası**; API,
+  yetki, problem+json yanıtları, transaction davranışı.
+- `tests/e2e/` — **Playwright for Python** (`pytest-playwright`), headless Chromium, tek worker,
+  `@pytest.mark.e2e` ile işaretli. Test edilen uygulamanın (uvicorn, rastgele port, geçici SQLite)
+  **tek sahibi bir pytest session fixture'ıdır**: başlatır, hazır olmasını bekler, teardown'da
+  durdurur — hata ve timeout durumunda da (`try/finally`, süreç `terminate` → `wait` → `kill`).
+- Profil ayrımı seçiciyle: `--fast` → `pytest -m "not e2e"`, full → ek olarak `pytest -m e2e`.
+- Adlandırma: `test_<davranış>.py`, `test_<ne>_<koşul>_<beklenen>` (`docs/conventions.md`).
+- Coverage yüzdesi kapısı **yok**; güvence kabul kriteri ↔ test haritasından gelir.
 
 ## What must be tested
-<!-- e.g. every business rule (BR-n), every boundary/forbidden dependency, critical flows E2E/smoke. -->
+- Her iş kuralı **BR-n** en az bir birim testle (sınır değerleriyle: BR-1 kıdem 5/15 yıl ve yaş
+  18/50 eşikleri, BR-2 tatil/hafta sonu, BR-7 yarım gün).
+- Her yasak bağımlılık bir `import-linter` sözleşmesiyle (`docs/architecture.md`).
+- Yetki: her rol için "görebilir / göremez" integration testi; varsayılan RED testi (yetki
+  bildirmeyen route yok).
+- Hata yanıtları: problem+json biçimi, iç ayrıntı sızmıyor.
+- Kritik akış e2e: talep oluştur → yönetici onaylar → bakiye düşer (BR-3 aşım uyarısı dahil).
 
 ## Protected-tests rule
 Weakening asserts, deleting, or skipping tests to reach green is forbidden. A red test triggers

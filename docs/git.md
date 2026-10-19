@@ -1,6 +1,7 @@
 # Git
 
-> **Template — adjust at bootstrap.** Defaults below are safe; loosen consciously, not accidentally.
+Şablonun güvenli varsayılanları bootstrap'ta (2026-10-19) aynen kabul edildi. Branch adları ve
+commit mesajları İngilizce.
 
 ## Branching
 - `feature/<spec-no>-<short-name>` — **no branch without a spec.** Also for CHANGE-lane mini-specs.
@@ -19,9 +20,11 @@
 ## Trivial changes
 <!-- Set at bootstrap. Applies only to requests the change-request triage rubric
      (workflows/change-request.md) classifies as TRIVIAL: no acceptance criterion changes, no shared code. -->
-- Policy: **(1) PR + one reviewer, no spec** — default; alternatives: (2) direct commit allowed on a
-  `trivial/<short-name>` branch · (3) everything goes through a mini-spec (`specs/TEMPLATE-mini.md`).
+- Policy: **(1) PR + one reviewer, no spec** — seçildi (bootstrap, 2026-10-19). Ucuz güvenlik ağı:
+  ikinci göz + CI'da check, "trivial sanılan" değişikliği yakalar.
 - Always: one narrow commit, `scripts/check` green. A second file or a new test means re-triage.
 
 ## Pull requests
 - PR template checklist completed; `scripts/check` green in CI; squash-merge.
+- GitHub branch protection on `main` (insan tarafından bir kez açılır): PR zorunlu, `check` ve
+  `doctor` job'ları zorunlu durum kontrolü, force push ve silme kapalı.

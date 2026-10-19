@@ -1,0 +1,39 @@
+[project]
+name = "polsan-leave-manager"
+version = "0.1.0"
+description = "Polsan izin yönetim sistemi"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "import-linter>=2.1",
+    "mypy>=1.13",
+    "pytest>=8.3",
+    "ruff>=0.8",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+# Python only: ruff also formats Markdown code blocks, which would rewrite ANEW core docs.
+include = ["*.py", "*.pyi"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "DTZ", "SIM", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["app"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+markers = ["e2e: browser end-to-end tests (full profile only)"]
