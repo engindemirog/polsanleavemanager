@@ -3,13 +3,18 @@ name = "polsan-leave-manager"
 version = "0.1.0"
 description = "Polsan izin yönetim sistemi"
 requires-python = ">=3.12,<3.13"
-dependencies = []
+dependencies = [
+    "fastapi>=0.148.0",
+    "uvicorn>=0.54.0",
+]
 
 [dependency-groups]
 dev = [
-    "import-linter>=2.1",
+    "grimp>=3.17",
+    "httpx>=0.28.1",
     "mypy>=1.13",
     "pytest>=8.3",
+    "pytest-playwright>=0.10.0",
     "ruff>=0.8",
 ]
 
@@ -24,6 +29,8 @@ include = ["*.py", "*.pyi"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP", "S", "DTZ", "SIM", "RUF"]
+# User-facing text is Turkish (docs/conventions.md): dotless/dotted I are letters, not confusables.
+allowed-confusables = ["ı", "İ"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101"]
@@ -35,5 +42,6 @@ files = ["app"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q --strict-markers"
+addopts = "-q --strict-markers --import-mode=importlib"
+pythonpath = ["."]
 markers = ["e2e: browser end-to-end tests (full profile only)"]

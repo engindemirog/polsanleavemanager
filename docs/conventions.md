@@ -51,6 +51,7 @@ Buradaki her kural ya araçla zorlanır (tercih edilen) ya da review'da kontrol 
 - `ruff check` — pyflakes, pycodestyle, isort, bugbear, pyupgrade, bandit (`S`), naive datetime
   yasağı (`DTZ`), simplify, ruff kuralları. `ruff format --check` — biçim.
 - `mypy --strict` — `app/` için tam tip denetimi.
-- `lint-imports` — `docs/architecture.md` "Forbidden dependencies" 1–3 (ilk modülle açılır).
+- Mimari test (`tests/architecture_rules.py`, grimp) — `docs/architecture.md` "Forbidden
+  dependencies" 1–3; `pytest` adımında koşar.
 - `uv lock --check` — `uv.lock` `pyproject.toml` ile tutarlı.
 - Hepsi `scripts/check` içinde (`scripts/check.conf`).
