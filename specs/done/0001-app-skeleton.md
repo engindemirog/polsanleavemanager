@@ -1,8 +1,9 @@
 # Spec 0001 — Uygulama iskeleti
 
-- Status: In progress
+- Status: Shipped
 - Mode: lite
 - Plan: `specs/plans/0001-plan.md`
+- Shipped: 2026-10-20 — Engin Demiroğ (PR #2)
 
 ## Intent
 Polsan Leave Manager'ın sonraki tüm feature'larının üzerine kurulacağı, çalışan ama henüz iş
@@ -66,52 +67,54 @@ bakiye, iş günü hesabı, kullanıcı girişi ve veritabanı — hiçbir iş �
   bir hata sayfası, çok dillilik, dağıtım/üretim ortamı.
 
 ## Acceptance criteria
-- [ ] AC-1 — README'de belgelenen tek komut uygulamayı yerelde başlatır; komut çalışırken açılış
+- [x] AC-1 — README'de belgelenen tek komut uygulamayı yerelde başlatır; komut çalışırken açılış
   sayfası ve sağlık kontrolü aynı makineden erişilebilir; varsayılan ayarla uygulama yalnızca yerel
   döngü adresinde (loopback) dinler. (R-1)
-- [ ] AC-2 — Tarayıcıda kök adres açıldığında sayfanın tek ana başlığı "Polsan İzin Yönetimi"dir ve
+- [x] AC-2 — Tarayıcıda kök adres açıldığında sayfanın tek ana başlığı "Polsan İzin Yönetimi"dir ve
   "yakında" bilgisini veren Türkçe metin görünür; sayfa dili `tr` olarak bildirilir; metin/arka
   plan kontrast oranı ≥ 4.5:1'dir. (R-2, UX Success, Accessibility)
-- [ ] AC-3 — Açılış sayfası yüklenirken uygulamanın kendi origin'i dışına hiçbir istek gitmez.
+- [x] AC-3 — Açılış sayfası yüklenirken uygulamanın kendi origin'i dışına hiçbir istek gitmez.
   (R-3)
-- [ ] AC-4 — Sağlık kontrolü, oturum olmadan istendiğinde başarı durumuyla ve yalnızca "çalışıyor"
+- [x] AC-4 — Sağlık kontrolü, oturum olmadan istendiğinde başarı durumuyla ve yalnızca "çalışıyor"
   bilgisiyle yanıt verir; yanıtta sürüm, ortam, yol veya başka bir alan yoktur. (R-4)
-- [ ] AC-5 — Var olmayan bir API adresine ve var olmayan bir API dışı adrese yapılan istekler
+- [x] AC-5 — Var olmayan bir API adresine ve var olmayan bir API dışı adrese yapılan istekler
   "bulunamadı" durumuyla, standart hata biçiminde (makine okunur kod + Türkçe başlık + Türkçe
   açıklama) yanıtlanır. (R-5, R-6, UX Error)
-- [ ] AC-6 — Sağlık kontrolüne desteklenmeyen bir yöntemle yapılan istek "yöntem desteklenmiyor"
+- [x] AC-6 — Sağlık kontrolüne desteklenmeyen bir yöntemle yapılan istek "yöntem desteklenmiyor"
   durumuyla, standart hata biçiminde yanıtlanır. (R-5, R-6)
-- [ ] AC-7 — Beklenmeyen bir hata, sunucu hatası durumuyla, standart biçimde, genel bir Türkçe
+- [x] AC-7 — Beklenmeyen bir hata, sunucu hatası durumuyla, standart biçimde, genel bir Türkçe
   mesaj ve bir korelasyon kimliğiyle yanıtlanır; yanıtta istisna mesajı, yığın izi veya dosya yolu
   yoktur; aynı korelasyon kimliği hata ayrıntısıyla birlikte loga yazılır; log kaydında istek
   gövdesi, çerez ve istek başlığı değeri bulunmaz. (R-5, R-7)
-- [ ] AC-8 — İki ayrı beklenmeyen hata iki farklı korelasyon kimliği üretir. (R-7)
-- [ ] AC-9 — Açılış sayfası, sağlık kontrolü, "bulunamadı" ve sunucu hatası yanıtlarının her biri
+- [x] AC-8 — İki ayrı beklenmeyen hata iki farklı korelasyon kimliği üretir. (R-7)
+- [x] AC-9 — Açılış sayfası, sağlık kontrolü, "bulunamadı" ve sunucu hatası yanıtlarının her biri
   R-8'deki üç güvenlik başlığını taşır. (R-8)
-- [ ] AC-10 — Bir modülün başka bir modülün iç paketini import etmesi, domain katmanının web/ORM
+- [x] AC-10 — Bir modülün başka bir modülün iç paketini import etmesi, domain katmanının web/ORM
   kütüphanesi import etmesi veya `app.shared`'in bir modülü import etmesi `scripts/check`'i
   kırmızı yapar (her kural için tekrarlanabilir gözlem). (R-9)
-- [ ] AC-11 — `./scripts/check --fast` e2e testlerini çalıştırmaz, birim ve entegrasyon testlerini
+- [x] AC-11 — `./scripts/check --fast` e2e testlerini çalıştırmaz, birim ve entegrasyon testlerini
   çalıştırır; `./scripts/check` e2e dahil tüm testleri çalıştırır; iki profilin test sayılarının
   toplamı tüm testlerin sayısına eşittir. (R-10)
-- [ ] AC-12 — Tarayıcı testi başarısız olduğunda veya zaman aşımına uğradığında da test edilen
+- [x] AC-12 — Tarayıcı testi başarısız olduğunda veya zaman aşımına uğradığında da test edilen
   uygulama durdurulur; `./scripts/residue` ve `./scripts/residue --fast` hayatta kalan süreç
   raporlamaz (check'e ait süreç yok). Hata/zaman aşımı durumu kalıcı bir kırmızı testle değil,
   tekrarlanabilir bir gözlemle kanıtlanır (geçici olarak başarısız kılınan bir e2e koşusu ardından
   süreç listesi); suite kalıcı olarak yeşil kalır. (R-10)
 
 ## Definition of Done
-- [ ] Every acceptance criterion mapped to proof (test or reproducible observation)
-- [ ] `scripts/check` green
-- [ ] Independent review done; real findings fixed, noise rejected with written rationale
-- [ ] Docs / ADRs updated if behavior or architecture changed
-- [ ] Spec moved to `specs/done/` (it becomes immutable there)
+- [x] Every acceptance criterion mapped to proof (test or reproducible observation)
+- [x] `scripts/check` green
+- [x] Independent review done; real findings fixed, noise rejected with written rationale
+- [x] Docs / ADRs updated if behavior or architecture changed
+- [x] Spec moved to `specs/done/` (it becomes immutable there)
 
 ## Scorecard (fill at ship — honest numbers make the process improvable)
 | Metric | Value |
 |---|---|
-| Spec revisions | |
-| Fix rounds | |
-| Review findings: real / noise | |
-| Regressions introduced | |
-| Bugs escaped to production | |
+| Spec revisions | 1 (self-critique: G1–G4 folded in before approval) |
+| Fix rounds | 3 (F-1/F-2/F-4 · F-6 · verify gap AC-7) |
+| Review findings: real / noise | 4 / 2 (F-1, F-2, F-4, F-6 real; F-3, F-5 noise) + 1 verify gap (AC-7) |
+| Regressions introduced | 1 (F-6: trailing-slash redirect exposed by the F-1 fix; caught in review round 2) |
+| Bugs escaped to production | 0 (not deployed) |
+
+Evidence: criterion ↔ test map in `specs/plans/0001-plan.md`; `./scripts/check` → `CHECK GREEN (full, 6 steps, …)`; AC-11/AC-12 observations in the VERIFY report (PR #2); residue on CI run 39408823924: `RESIDUE CLEAN (full, 2 runs)`, `RESIDUE CLEAN (fast, 2 runs)`.
