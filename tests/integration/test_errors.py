@@ -108,6 +108,7 @@ def test_unexpected_error_log_has_correlation_id_and_no_request_data(
     log_text = caplog.text
     assert response.json()["correlation_id"] in log_text
     assert "RuntimeError" in log_text
+    assert "in _boom" in log_text  # the stack trace reaches the log (R-7)
     assert "GET" in log_text and "/api/test-boom" in log_text
     for leak in (HIDDEN_MESSAGE, "cerez-degeri", "govde-icerigi", "baslik-degeri"):
         assert leak not in log_text
