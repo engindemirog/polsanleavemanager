@@ -45,3 +45,19 @@ jobs:
         run: |
           uv export --frozen --all-groups --no-hashes --format requirements-txt > "$RUNNER_TEMP/requirements.txt"
           uvx pip-audit --strict -r "$RUNNER_TEMP/requirements.txt"
+
+  residue:
+    # Resource hygiene proof (docs/testing.md): check twice back to back leaves nothing running —
+    # on a clean runner, so no other activity is mistaken for a survivor. Both profiles.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Install locked environment
+        run: uv sync --frozen
+      - name: Install e2e browser (docs/testing.md)
+        run: uv run --frozen playwright install --with-deps chromium
+      - name: Residue test (full profile)
+        run: ./scripts/residue
+      - name: Residue test (fast profile)
+        run: ./scripts/residue --fast
